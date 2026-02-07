@@ -1,0 +1,73 @@
+#!/bin/bash
+
+echo "Installing tools for building ISO..."
+sudo pacman -S wget archiso git dialog squashfs-tools --needed
+
+
+path_to_local_repo=./local/repo
+path_to_temp_dir=./temp-dir
+path_to_pacman_conf=./pacman.conf
+
+mkdir -p $path_to_local_repo
+mkdir -p $path_to_temp_dir
+
+echo "Adding ROS-Helper-Scripts into source..."
+mkdir -p $path_to_temp_dir/ROS-Helper-Scripts
+git clone --depth 1 https://github.com/RengeOS/ROS-Helper-Scripts $path_to_temp_dir/ROS-Helper-Scripts
+cd $path_to_temp_dir/ROS-Helper-Scripts
+makepkg -s
+cd ../../
+mv $path_to_temp_dir/ROS-Helper-Scripts/*.pkg.tar.zst $path_to_local_repo
+
+echo "Adding RengeOS logo package into source..."
+mkdir -p $path_to_temp_dir/PKGBUILD
+git clone --depth 1 https://github.com/RengeOS/PKGBUILD $path_to_temp_dir/PKGBUILD
+cd $path_to_temp_dir/PKGBUILD/rengeos-logo
+makepkg -s
+cd ../../../
+mv $path_to_temp_dir/PKGBUILD/rengeos-logo/*.pkg.tar.zst $path_to_local_repo
+
+echo "Adding RengeOS Hooks package into source..."
+cd $path_to_temp_dir/PKGBUILD/rengeos-hooks
+makepkg -s
+cd ../../../
+mv $path_to_temp_dir/PKGBUILD/rengeos-hooks/*.pkg.tar.zst $path_to_local_repo
+
+echo "Adding birany linux lts kernel(linux-renge-bore-lts) into source..."
+mkdir -p $path_to_temp_dir/Binary-Linux-Kernel-1
+mkdir -p $path_to_temp_dir/Binary-Linux-Kernel-2
+wget -P $path_to_temp_dir/Binary-Linux-Kernel-1 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-lts-6.12.65-1-x86_64.pkg.tar.zst
+wget -P $path_to_temp_dir/Binary-Linux-Kernel-1 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-lts-headers-6.12.65-1-x86_64.pkg.tar.zst
+
+echo "Adding binary linux lastest kernel(linux-renge-bore) into source..."
+wget -P $path_to_temp_dir/Binary-Linux-Kernel-2 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-bore-6.18.6-1-x86_64.pkg.tar.zst
+wget -P $path_to_temp_dir/Binary-Linux-Kernel-2 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-bore-headers-6.18.6-1-x86_64.pkg.tar.zst
+mv $path_to_temp_dir/Binary-Linux-Kernel-1/* $path_to_local_repo
+mv $path_to_temp_dir/Binary-Linux-Kernel-2/* $path_to_local_repo
+
+echo "Making Packages Database In $path_to_local_repo"
+repo-add $path_to_local_repo/custom.db.tar.gz $path_to_local_repo/*.pkg.tar.zst
+
+echo "Check and adding path to local repo for pacman.conf"
+local_repo_server="Server = file:///home/$(whoami)/Source-ISO/local/repo"
+# Cheking for pacman.conf
+if [ ! -f "$path_to_pacman_conf" ]; then
+    echo "File $path_to_pacman_conf not found!"
+    exit 1
+fi
+echo "$local_repo_server" >> "$path_to_pacman_conf"
+
+echo "Building ISO from source..."
+sudo mkarchiso -v -w work -o out .
+echo "RengeOS ISO has been built successfully"
+
+echo "Creating SHA256 for ISO"
+cd ./out/
+ISO_NAME=$(ls *.iso)
+sudo sha256sum "$ISO_NAME" | sudo tee "$ISO_NAME.sha256" > /dev/null
+
+echo "Change permission for ISO and SHA256 ISO"
+sudo chmod 644 -R *
+cd ..
+
+echo "Done!"

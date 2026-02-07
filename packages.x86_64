@@ -1,0 +1,72 @@
+# Linux Kernel
+linux-renge-bore
+linux-renge-bore-headers
+linux-renge-lts
+linux-renge-lts-headers
+
+# Base
+arch-install-scripts
+base
+base-devel
+linux-firmware
+mkinitcpio
+mkinitcpio-archiso
+python
+sudo
+systemd
+bash
+pv
+dialog
+wget
+ros-helper-scripts
+rengeos-logo
+rengeos-hooks
+
+# Cpu Support
+amd-ucode
+intel-ucode
+pciutils
+usbutils
+
+# Bootloader
+grub
+efibootmgr
+libisoburn
+mtools
+libfido2
+os-prober
+syslinux
+
+# FILESYSTEM & Compression (Xfs -> Bcachefs + LZ4)
+xfsprogs
+xfsdump
+bcachefs-tools
+bcachefs-dkms
+attr
+acl
+lz4
+lib32-lz4
+python-lz4
+
+# Partition Tools
+squashfs-tools
+gptfdisk
+dosfstools
+e2fsprogs
+
+# Zram
+zram-generator
+
+# TUI & Audio
+alsa-utils
+terminus-font
+vim
+nano
+less
+bash-completion
+
+# Networks
+iwd
+iproute2
+networkmanager
+modemmanager

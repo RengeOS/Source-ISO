@@ -1,0 +1,97 @@
+name: Build ISO and Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: archlinux:latest
+      options: --privileged
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure pacman
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm git wget archiso squashfs-tools base-devel grub syslinux dosfstools mtools shadow dialog
+
+      - name: Build environment
+        run: |
+          set -e
+
+          path_to_local_repo=./local/repo
+          path_to_temp_dir=./temp-dir
+          path_to_pacman_conf=./pacman.conf
+
+          mkdir -p "$path_to_local_repo"
+          mkdir -p "$path_to_temp_dir"
+
+          useradd -m builder
+          su - builder -c 'bash -s' <<'EOF'
+          set -e
+          cd /tmp
+
+          git clone --depth 1 https://github.com/RengeOS/ROS-Helper-Scripts.git
+          cd ROS-Helper-Scripts
+          makepkg -s --noconfirm
+          cd ..
+          
+          git clone --depth 1 https://github.com/RengeOS/PKGBUILD.git
+          cd PKGBUILD/rengeos-logo
+          makepkg -s --noconfirm
+          cd ..
+          cd rengeos-hooks
+          makepkg -s --noconfirm
+          
+          EOF
+          mv /tmp/ROS-Helper-Scripts/*.pkg.tar.zst "$path_to_local_repo"
+          mv /tmp/PKGBUILD/rengeos-logo/*.pkg.tar.zst "$path_to_local_repo"
+          mv /tmp/PKGBUILD/rengeos-hooks/*.pkg.tar.zst "$path_to_local_repo"
+          
+          mkdir -p "$path_to_temp_dir/Binary-Linux-Kernel-1"
+          mkdir -p "$path_to_temp_dir/Binary-Linux-Kernel-2"
+
+          wget -P "$path_to_temp_dir/Binary-Linux-Kernel-1" \
+            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-lts-6.12.65-1-x86_64.pkg.tar.zst \
+            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-lts-headers-6.12.65-1-x86_64.pkg.tar.zst
+
+          wget -P "$path_to_temp_dir/Binary-Linux-Kernel-2" \
+            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-bore-6.18.6-1-x86_64.pkg.tar.zst \
+            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-bore-headers-6.18.6-1-x86_64.pkg.tar.zst
+
+          mv "$path_to_temp_dir/Binary-Linux-Kernel-1/"* "$path_to_local_repo"
+          mv "$path_to_temp_dir/Binary-Linux-Kernel-2/"* "$path_to_local_repo"
+
+          repo-add "$path_to_local_repo/custom.db.tar.gz" "$path_to_local_repo/"*.pkg.tar.zst
+
+          echo "Server = file://$(pwd)/local/repo" >> "$path_to_pacman_conf"
+
+      - name: Build ISO
+        run: |
+          mkarchiso -v -w work -o out .
+
+      - name: Create checksum
+        run: |
+          cd out
+
+          ISO_NAME=$(ls *.iso)
+          sha256sum "$ISO_NAME" > "$ISO_NAME.sha256"
+
+          echo "ISO_FILE=out/$ISO_NAME" >> $GITHUB_ENV
+          echo "ISO_NAME=$ISO_NAME" >> $GITHUB_ENV
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.ISO_NAME }}
+          name: ${{ env.ISO_NAME }}
+          files: |
+            ${{ env.ISO_FILE }}
+            ${{ env.ISO_FILE }}.sha256
+

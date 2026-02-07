@@ -1,0 +1,55 @@
+name: Upload Release to SourceForge
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload-to-sourceforge:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Get release
+        id: release
+        run: |
+          RELEASE_DATA=$(curl -sL \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/latest")
+          
+          echo "$RELEASE_DATA" | jq -r '.tag_name' > tag.txt
+          echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name | test("\\.(zip|tar\\.gz)$") | not) | "\(.browser_download_url)\t\(.name)"' > assets.txt
+
+      - name: Download assets
+        run: |
+          mkdir -p downloads
+          while IFS=$'\t' read -r url name; do
+            [ -n "$url" ] && curl -L -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -o "downloads/$name" "$url"
+          done < assets.txt
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SF_GITHUB_ACTIONS }}" > ~/.ssh/sf_key
+          chmod 600 ~/.ssh/sf_key
+          ssh-keyscan -t rsa,ed25519 frs.sourceforge.net >> ~/.ssh/known_hosts
+
+      - name: Upload to SourceForge
+        run: |
+          for file in downloads/*; do
+            [ -f "$file" ] && scp -i ~/.ssh/sf_key -o StrictHostKeyChecking=no "$file" crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-ISO/Latest/
+          done
+
+      - name: Summary
+        run: |
+          echo "## Upload Completed" >> $GITHUB_STEP_SUMMARY
+          echo "**Release:** $(cat tag.txt)" >> $GITHUB_STEP_SUMMARY
+          echo "### Files:" >> $GITHUB_STEP_SUMMARY
+          for file in downloads/*; do
+            [ -f "$file" ] && echo "- $(basename "$file")" >> $GITHUB_STEP_SUMMARY
+          done
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f ~/.ssh/sf_key
+          rm -rf downloads tag.txt assets.txt
