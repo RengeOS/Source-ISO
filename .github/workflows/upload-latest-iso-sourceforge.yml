@@ -36,7 +36,7 @@ jobs:
       - name: Upload to SourceForge
         run: |
           for file in downloads/*; do
-            [ -f "$file" ] && scp -i ~/.ssh/sf_key -o StrictHostKeyChecking=no "$file" crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-ISO/Latest/
+            [ -f "$file" ] && scp -i ~/.ssh/sf_key -o StrictHostKeyChecking=no "$file" crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-ISO/Latest/Minimal-Edition/
           done
 
       - name: Summary

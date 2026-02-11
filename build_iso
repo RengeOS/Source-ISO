@@ -36,12 +36,12 @@ mv $path_to_temp_dir/PKGBUILD/rengeos-hooks/*.pkg.tar.zst $path_to_local_repo
 echo "Adding birany linux lts kernel(linux-renge-bore-lts) into source..."
 mkdir -p $path_to_temp_dir/Binary-Linux-Kernel-1
 mkdir -p $path_to_temp_dir/Binary-Linux-Kernel-2
-wget -P $path_to_temp_dir/Binary-Linux-Kernel-1 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-lts-6.12.65-1-x86_64.pkg.tar.zst
-wget -P $path_to_temp_dir/Binary-Linux-Kernel-1 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-lts-headers-6.12.65-1-x86_64.pkg.tar.zst
+wget -P $path_to_temp_dir/Binary-Linux-Kernel-1 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-lts-6.12.65-1-x86_64.pkg.tar.zst
+wget -P $path_to_temp_dir/Binary-Linux-Kernel-1 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-lts-headers-6.12.65-1-x86_64.pkg.tar.zst
 
 echo "Adding binary linux lastest kernel(linux-renge-bore) into source..."
-wget -P $path_to_temp_dir/Binary-Linux-Kernel-2 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-bore-6.18.8-1-x86_64.pkg.tar.zst
-wget -P $path_to_temp_dir/Binary-Linux-Kernel-2 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-renge-bore-headers-6.18.8-1-x86_64.pkg.tar.zst
+wget -P $path_to_temp_dir/Binary-Linux-Kernel-2 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-bore-6.18.8-1-x86_64.pkg.tar.zst
+wget -P $path_to_temp_dir/Binary-Linux-Kernel-2 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-bore-headers-6.18.8-1-x86_64.pkg.tar.zst
 mv $path_to_temp_dir/Binary-Linux-Kernel-1/* $path_to_local_repo
 mv $path_to_temp_dir/Binary-Linux-Kernel-2/* $path_to_local_repo
 

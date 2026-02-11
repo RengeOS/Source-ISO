@@ -1,4 +1,4 @@
-name: Move Latest ISO to Older Folder on SourceForge
+name: Move Latest Miminal ISO to Older Folder on SourceForge
 
 on:
   workflow_dispatch:
@@ -18,12 +18,12 @@ jobs:
       - name: Download from Latest
         run: |
           mkdir -p downloads
-          scp -i ~/.ssh/sf_key -r crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-ISO/Latest/* downloads/
+          scp -i ~/.ssh/sf_key -r crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-ISO/Latest/Miminal-Edition/* downloads/
 
       - name: Upload to Older
         run: |
           for file in downloads/*; do
-            [ -f "$file" ] && scp -i ~/.ssh/sf_key "$file" crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-ISO/Older/
+            [ -f "$file" ] && scp -i ~/.ssh/sf_key "$file" crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-ISO/Older/Minimal-Edition/
           done
 
       - name: Summary
