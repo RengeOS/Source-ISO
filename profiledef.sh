@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
-iso_name="rengeos-minimal-edition"
+iso_name="rengeos-minimal"
 iso_label="RengeOS_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
 iso_publisher="RengeOS <https://github.com/RengeOS>"
 iso_application="RengeOS Live ISO"
