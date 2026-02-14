@@ -49,8 +49,8 @@ jobs:
           mkdir -p "$path_to_temp_dir/Binary-Linux-Kernel-1"
           mkdir -p "$path_to_temp_dir/Binary-Linux-Kernel-2"
           wget -P "$path_to_temp_dir/Binary-Linux-Kernel-1" \
-            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-stratix-pulse-lts-6.12.71-1-x86_64.pkg.tar.zst \
-            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-stratix-pulse-lts-headers-6.12.71-1-x86_64.pkg.tar.zst
+            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-stratix-pulse-lts/linux-stratix-pulse-lts-6.12.71-1-x86_64.pkg.tar.zst \
+            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-stratix-pulse-lts/linux-stratix-pulse-lts-headers-6.12.71-1-x86_64.pkg.tar.zst
           wget -P "$path_to_temp_dir/Binary-Linux-Kernel-2" \
             https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-stratix-pulse/linux-stratix-pulse-6.19-1-x86_64.pkg.tar.zst \
             https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-stratix-pulse/linux-stratix-pulse-headers-6.19-1-x86_64.pkg.tar.zst
