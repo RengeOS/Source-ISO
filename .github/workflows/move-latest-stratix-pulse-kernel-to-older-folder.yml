@@ -23,7 +23,7 @@ jobs:
       - name: Upload to Older
         run: |
           for file in downloads/*; do
-            [ -f "$file" ] && scp -i ~/.ssh/sf_key "$file" crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-Binary-Kernel/Older/
+            [ -f "$file" ] && scp -i ~/.ssh/sf_key "$file" crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-Binary-Kernel/linux-older-storages/
           done
 
       - name: Summary

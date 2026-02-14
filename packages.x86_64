@@ -1,8 +1,8 @@
 # Linux Kernel
 linux-stratix-pulse
 linux-stratix-pulse-headers
-linux-renge-lts
-linux-renge-lts-headers
+linux-stratix-pulse-lts
+linux-stratix-pulse-lts-headers
 
 # Base
 arch-install-scripts

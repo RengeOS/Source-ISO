@@ -36,11 +36,11 @@ mv $path_to_temp_dir/PKGBUILD/rengeos-hooks/*.pkg.tar.zst $path_to_local_repo
 echo "Fixing bcachefs libs issue"
 wget -P $path_to_local_repo https://archive.archlinux.org/packages/b/binutils/binutils-2.45.1-1-x86_64.pkg.tar.zst
 
-echo "Adding birany linux lts kernel(linux-renge-bore-lts) into source..."
+echo "Adding birany linux lts kernel(linux-stratix-pulse-lts) into source..."
 mkdir -p $path_to_temp_dir/Binary-Linux-Kernel-1
 mkdir -p $path_to_temp_dir/Binary-Linux-Kernel-2
-wget -P $path_to_temp_dir/Binary-Linux-Kernel-1 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-lts-6.12.65-1-x86_64.pkg.tar.zst
-wget -P $path_to_temp_dir/Binary-Linux-Kernel-1 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-lts-headers-6.12.65-1-x86_64.pkg.tar.zst
+wget -P $path_to_temp_dir/Binary-Linux-Kernel-1 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-stratix-pulse-lts/linux-stratix-pulse-lts-6.12.71-1-x86_64.pkg.tar.zst
+wget -P $path_to_temp_dir/Binary-Linux-Kernel-1 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-stratix-pulse-lts/linux-stratix-pulse-lts-headers-6.12.71-1-x86_64.pkg.tar.zst
 
 echo "Adding binary linux lastest kernel(linux-stratix-pulse) into source..."
 wget -P $path_to_temp_dir/Binary-Linux-Kernel-2 https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-stratix-pulse/linux-stratix-pulse-6.19-1-x86_64.pkg.tar.zst

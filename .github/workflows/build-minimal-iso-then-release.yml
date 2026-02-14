@@ -41,6 +41,7 @@ jobs:
           
           EOF
           wget -P "$path_to_local_repo" https://archive.archlinux.org/packages/b/binutils/binutils-2.45.1-1-x86_64.pkg.tar.zst
+
           mv /tmp/ROS-Helper-Scripts/*.pkg.tar.zst "$path_to_local_repo"
           mv /tmp/PKGBUILD/rengeos-logo/*.pkg.tar.zst "$path_to_local_repo"
           mv /tmp/PKGBUILD/rengeos-hooks/*.pkg.tar.zst "$path_to_local_repo"
@@ -48,8 +49,8 @@ jobs:
           mkdir -p "$path_to_temp_dir/Binary-Linux-Kernel-1"
           mkdir -p "$path_to_temp_dir/Binary-Linux-Kernel-2"
           wget -P "$path_to_temp_dir/Binary-Linux-Kernel-1" \
-            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-lts-6.12.65-1-x86_64.pkg.tar.zst \
-            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-lts-headers-6.12.65-1-x86_64.pkg.tar.zst
+            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-stratix-pulse-lts-6.12.71-1-x86_64.pkg.tar.zst \
+            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-stratix-pulse-lts-headers-6.12.71-1-x86_64.pkg.tar.zst
           wget -P "$path_to_temp_dir/Binary-Linux-Kernel-2" \
             https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-stratix-pulse/linux-stratix-pulse-6.19-1-x86_64.pkg.tar.zst \
             https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-stratix-pulse/linux-stratix-pulse-headers-6.19-1-x86_64.pkg.tar.zst
