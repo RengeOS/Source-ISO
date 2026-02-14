@@ -1,4 +1,4 @@
-name: Move Latest Kernel to Older Folder on SourceForge
+name: Move Latest Stratix Pulse Kernel to Older Folder on SourceForge
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
       - name: Download from Latest
         run: |
           mkdir -p downloads
-          scp -i ~/.ssh/sf_key -r crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-Binary-Kernel/Latest/* downloads/
+          scp -i ~/.ssh/sf_key -r crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-Binary-Kernel/linux-stratix-pulse/* downloads/
 
       - name: Upload to Older
         run: |
