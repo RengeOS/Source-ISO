@@ -1,8 +1,8 @@
 # Linux Kernel
-linux-renge-bore
-linux-renge-bore-headers
-linux-renge-lts
-linux-renge-lts-headers
+linux-stratix-pulse
+linux-stratix-pulse-headers
+linux-stratix-pulse-lts
+linux-stratix-pulse-lts-headers
 
 # Base
 arch-install-scripts
@@ -21,6 +21,7 @@ wget
 ros-helper-scripts
 rengeos-logo
 rengeos-hooks
+binutils=2.45.1-1
 
 # Cpu Support
 amd-ucode

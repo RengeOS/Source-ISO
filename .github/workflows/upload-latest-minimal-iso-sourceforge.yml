@@ -1,4 +1,4 @@
-name: Upload Release to SourceForge
+name: Upload Minimal ISO to SourceForge
 
 on:
   workflow_dispatch:
