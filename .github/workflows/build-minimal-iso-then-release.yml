@@ -50,8 +50,8 @@ jobs:
             https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-lts-6.12.65-1-x86_64.pkg.tar.zst \
             https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-lts-headers-6.12.65-1-x86_64.pkg.tar.zst
           wget -P "$path_to_temp_dir/Binary-Linux-Kernel-2" \
-            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-bore-6.18.8-1-x86_64.pkg.tar.zst \
-            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/Latest/linux-renge-bore-headers-6.18.8-1-x86_64.pkg.tar.zst
+            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-stratix-pulse/linux-stratix-pulse-6.19-1-x86_64.pkg.tar.zst \
+            https://sourceforge.net/projects/rengeos/files/RengeOS-Binary-Kernel/linux-stratix-pulse/linux-stratix-pulse-headers-6.19-1-x86_64.pkg.tar.zst
           mv "$path_to_temp_dir/Binary-Linux-Kernel-1/"* "$path_to_local_repo"
           mv "$path_to_temp_dir/Binary-Linux-Kernel-2/"* "$path_to_local_repo"
           repo-add "$path_to_local_repo/custom.db.tar.gz" "$path_to_local_repo/"*.pkg.tar.zst
