@@ -40,6 +40,7 @@ jobs:
           makepkg -s --noconfirm
           
           EOF
+          wget -P "$path_to_local_repo" https://archive.archlinux.org/packages/b/binutils/binutils-2.45.1-1-x86_64.pkg.tar.zst
           mv /tmp/ROS-Helper-Scripts/*.pkg.tar.zst "$path_to_local_repo"
           mv /tmp/PKGBUILD/rengeos-logo/*.pkg.tar.zst "$path_to_local_repo"
           mv /tmp/PKGBUILD/rengeos-hooks/*.pkg.tar.zst "$path_to_local_repo"
