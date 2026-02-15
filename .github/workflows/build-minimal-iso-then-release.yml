@@ -70,7 +70,7 @@ jobs:
           echo "ISO_NAME=$ISO_NAME" >> $GITHUB_ENV
       - name: Fetch release notes
         run: |
-          wget -O release-notes.md https://raw.githubusercontent.com/RengeOS/Release-Notes/main/README.md
+          wget -O release-notes.md https://raw.githubusercontent.com/RengeOS/Release-Notes/main/release-notes.md
           echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
           cat release-notes.md >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
