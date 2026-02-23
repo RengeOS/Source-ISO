@@ -60,6 +60,13 @@ if [ ! -f "$path_to_pacman_conf" ]; then
 fi
 echo "$local_repo_server" >> "$path_to_pacman_conf"
 
+echo "Installing NiriWM-Edition skel for ISO..."
+mkdir -p $path_to_temp_dir/NiriWM-Edition
+git clone --depth 1 https://github.com/RengeOS/NiriWM-Edition $path_to_temp_dir/NiriWM-Edition
+cd $path_to_temp_dir/NiriWM-Edition
+bash -c ./makeskel.sh && mv ./skel ../../airootfs/etc/
+cd ../../
+
 echo "Building ISO from source..."
 sudo mkarchiso -v -w work -o out .
 echo "RengeOS ISO has been built successfully"

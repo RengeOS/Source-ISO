@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
-iso_name="rengeos-minimal"
+iso_name="rengeos-niriwm"
 iso_label="RengeOS_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
 iso_publisher="RengeOS <https://github.com/RengeOS>"
 iso_application="RengeOS Live ISO"
@@ -15,6 +15,7 @@ airootfs_image_tool_options=('-comp' 'lz4' '-Xhc' '-b' '1M')
 bootstrap_tarball_compression=('lz4' '-9')
 file_permissions=(
   ["/etc/shadow"]="0:0:400"
+  ["/etc/gshadow"]="0:0:400"
   ["/root"]="0:0:750"
   ["/root/.gnupg"]="0:0:700"
   ["/usr/local/bin/livecd-sound"]="0:0:755"
