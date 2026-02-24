@@ -73,8 +73,10 @@ networkmanager
 modemmanager
 
 # NiriWM Edition Packages
+woff2-material-symbols-variable-git
 ttf-material-symbols-variable-git
-wlogout
+ttf-material-icons-git
+wlogout-git
 matugen
 hyprlax
 gnome-bluetooth-3.0
@@ -112,3 +114,4 @@ wlsunset
 hyprlock
 swaync
 pavucontrol
+firefox
