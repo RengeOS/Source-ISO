@@ -52,8 +52,8 @@ echo "Installing NiriWM-Edition skel for ISO..."
 mkdir -p $path_to_temp_dir/NiriWM-Edition
 git clone --depth 1 https://github.com/RengeOS/NiriWM-Edition $path_to_temp_dir/NiriWM-Edition
 cd $path_to_temp_dir/NiriWM-Edition
-bash -c ./makeskel.sh && mv ./skel ../../airootfs/etc/
-bash -c ./build-aur.sh --all && mv ./Packages-AUR/* ../../local/repo/
+./makeskel.sh && mv ./skel ../../airootfs/etc/
+./build-aur.sh --all && mv ./Packages-AUR/* ../../local/repo/
 cd ../../
 
 echo "Making Packages Database In $path_to_local_repo"
