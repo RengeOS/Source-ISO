@@ -11,13 +11,9 @@ jobs:
         run: |
           pacman -Syu --noconfirm
           pacman -S --noconfirm git openssh sudo base-devel
-          cat > /usr/local/bin/pacman-auto << 'EOF'
-          #!/bin/bash
-          /usr/bin/pacman --noconfirm --needed "$@"
-          EOF
-          chmod +x /usr/local/bin/pacman-auto
-          echo 'PACMAN=/usr/local/bin/pacman-auto' >> /etc/makepkg.conf
-          echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
+          echo 'PACMAN_AUTH=(sudo)' >> /etc/makepkg.conf
+          sed -i 's/^#PACMAN_OPTS=/PACMAN_OPTS=/' /etc/makepkg.conf
+          echo 'PACMAN_OPTS="--noconfirm"' >> /etc/makepkg.conf
 
       - name: Setup SSH
         run: |
@@ -30,8 +26,6 @@ jobs:
         run: |
           useradd -m builduser
           echo "builduser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/builduser
-          cp /etc/makepkg.conf /home/builduser/.makepkg.conf
-          chown builduser:builduser /home/builduser/.makepkg.conf
 
       - name: Clone repository
         run: |
@@ -40,12 +34,7 @@ jobs:
 
       - name: Run build-aur.sh
         run: |
-          sudo -u builduser bash -c "
-            export PACMAN=/usr/local/bin/pacman-auto
-            export MAKEFLAGS='-j$(nproc)'
-            cd /home/builduser/NiriWM-Edition
-            ./build-aur.sh --all
-          "
+          sudo -u builduser bash -c "cd /home/builduser/NiriWM-Edition && PACMAN_OPTS='--noconfirm' ./build-aur.sh --all"
 
       - name: Create Packages-AUR if not exists
         run: |
@@ -53,11 +42,7 @@ jobs:
 
       - name: Run makerepo.sh
         run: |
-          sudo -u builduser bash -c "
-            export PACMAN=/usr/local/bin/pacman-auto
-            cd /home/builduser/NiriWM-Edition
-            ./makerepo.sh
-          "
+          sudo -u builduser bash -c "cd /home/builduser/NiriWM-Edition && PACMAN_OPTS='--noconfirm' ./makerepo.sh"
 
       - name: Upload packages to SourceForge
         run: |
