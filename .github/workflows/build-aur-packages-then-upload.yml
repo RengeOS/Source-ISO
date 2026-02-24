@@ -12,12 +12,6 @@ jobs:
           chmod 600 ~/.ssh/sf_key
           ssh-keyscan -t rsa,ed25519 frs.sourceforge.net >> ~/.ssh/known_hosts
 
-      - name: Install dependencies
-        run: |
-          sudo pacman -Syu --noconfirm base-devel git || true
-          sudo apt-get update -y
-          sudo apt-get install -y git
-
       - name: Create temporary build user
         run: |
           sudo useradd -m builduser
@@ -30,19 +24,21 @@ jobs:
 
       - name: Run build-aur.sh
         run: |
-          cd /home/builduser/NiriWM-Edition
-          sudo -u builduser bash ./build-aur.sh
+          sudo -u builduser bash -c "cd /home/builduser/NiriWM-Edition && ./build-aur.sh --all"
+
+      - name: Create Packages-AUR if not exists
+        run: |
+          sudo -u builduser mkdir -p /home/builduser/NiriWM-Edition/Packages-AUR
 
       - name: Run makerepo.sh
         run: |
-          cd /home/builduser/NiriWM-Edition
-          sudo -u builduser bash ./makerepo.sh
+          sudo -u builduser bash -c "cd /home/builduser/NiriWM-Edition && ./makerepo.sh"
 
       - name: Upload packages to SourceForge
         run: |
-          cd /home/builduser/NiriWM-Edition/Packages-AUR
           cp ~/.ssh/sf_key /tmp/sf_key
           chmod 600 /tmp/sf_key
+          cd /home/builduser/NiriWM-Edition/Packages-AUR
           for file in *; do
             [ -f "$file" ] && scp -i /tmp/sf_key "$file" crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-Hosting-Repo/Packages/x86_64/
           done
@@ -58,4 +54,4 @@ jobs:
         if: always()
         run: |
           rm -f ~/.ssh/sf_key /tmp/sf_key
-          sudo userdel -r builduser || true
+          sudo userdel -r builduser 2>/dev/null || true
