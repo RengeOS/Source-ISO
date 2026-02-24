@@ -48,6 +48,14 @@ wget -P $path_to_temp_dir/Binary-Linux-Kernel-2 https://sourceforge.net/projects
 mv $path_to_temp_dir/Binary-Linux-Kernel-1/* $path_to_local_repo
 mv $path_to_temp_dir/Binary-Linux-Kernel-2/* $path_to_local_repo
 
+echo "Installing NiriWM-Edition skel for ISO..."
+mkdir -p $path_to_temp_dir/NiriWM-Edition
+git clone --depth 1 https://github.com/RengeOS/NiriWM-Edition $path_to_temp_dir/NiriWM-Edition
+cd $path_to_temp_dir/NiriWM-Edition
+bash -c ./makeskel.sh && mv ./skel ../../airootfs/etc/
+bash -c ./build-aur.sh --all && mv ./Packages-AUR/* ../../local/repo/
+cd ../../
+
 echo "Making Packages Database In $path_to_local_repo"
 repo-add $path_to_local_repo/custom.db.tar.gz $path_to_local_repo/*.pkg.tar.zst
 
@@ -60,12 +68,6 @@ if [ ! -f "$path_to_pacman_conf" ]; then
 fi
 echo "$local_repo_server" >> "$path_to_pacman_conf"
 
-echo "Installing NiriWM-Edition skel for ISO..."
-mkdir -p $path_to_temp_dir/NiriWM-Edition
-git clone --depth 1 https://github.com/RengeOS/NiriWM-Edition $path_to_temp_dir/NiriWM-Edition
-cd $path_to_temp_dir/NiriWM-Edition
-bash -c ./makeskel.sh && mv ./skel ../../airootfs/etc/
-cd ../../
 
 echo "Building ISO from source..."
 sudo mkarchiso -v -w work -o out .
