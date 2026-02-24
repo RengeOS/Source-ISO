@@ -1,26 +1,36 @@
 name: Build AUR Packages and Upload to SourceForge
+
 on:
   workflow_dispatch:
+
 jobs:
   build-and-upload:
     runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+
     steps:
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm git openssh sudo base-devel
+
       - name: Setup SSH
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SF_GITHUB_ACTIONS }}" > ~/.ssh/sf_key
-          chmod 600 ~/.ssh/sf_key
-          ssh-keyscan -t rsa,ed25519 frs.sourceforge.net >> ~/.ssh/known_hosts
+          mkdir -p /root/.ssh
+          echo "${{ secrets.SF_GITHUB_ACTIONS }}" > /root/.ssh/sf_key
+          chmod 600 /root/.ssh/sf_key
+          ssh-keyscan -t rsa,ed25519 frs.sourceforge.net >> /root/.ssh/known_hosts
 
       - name: Create temporary build user
         run: |
-          sudo useradd -m builduser
-          echo "builduser ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/builduser
+          useradd -m builduser
+          echo "builduser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/builduser
 
       - name: Clone repository
         run: |
           sudo -u builduser git clone https://github.com/RengeOS/NiriWM-Edition /home/builduser/NiriWM-Edition
-          sudo chown -R builduser:builduser /home/builduser/NiriWM-Edition
+          chown -R builduser:builduser /home/builduser/NiriWM-Edition
 
       - name: Run build-aur.sh
         run: |
@@ -36,22 +46,31 @@ jobs:
 
       - name: Upload packages to SourceForge
         run: |
-          cp ~/.ssh/sf_key /tmp/sf_key
-          chmod 600 /tmp/sf_key
-          cd /home/builduser/NiriWM-Edition/Packages-AUR
-          for file in *; do
-            [ -f "$file" ] && scp -i /tmp/sf_key "$file" crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-Hosting-Repo/Packages/x86_64/
+          PACKAGES_DIR="/home/builduser/NiriWM-Edition/Packages-AUR"
+          shopt -s nullglob
+          files=("$PACKAGES_DIR"/*)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No files found in $PACKAGES_DIR"
+            exit 0
+          fi
+          for file in "${files[@]}"; do
+            [ -f "$file" ] && scp -i /root/.ssh/sf_key \
+              -o StrictHostKeyChecking=no \
+              "$file" \
+              crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-Hosting-Repo/Packages/x86_64/
           done
 
       - name: Summary
         run: |
           echo "## Uploaded Packages" >> $GITHUB_STEP_SUMMARY
-          for file in /home/builduser/NiriWM-Edition/Packages-AUR/*; do
+          PACKAGES_DIR="/home/builduser/NiriWM-Edition/Packages-AUR"
+          shopt -s nullglob
+          for file in "$PACKAGES_DIR"/*; do
             [ -f "$file" ] && echo "- $(basename "$file")" >> $GITHUB_STEP_SUMMARY
           done
 
       - name: Cleanup
         if: always()
         run: |
-          rm -f ~/.ssh/sf_key /tmp/sf_key
-          sudo userdel -r builduser 2>/dev/null || true
+          rm -f /root/.ssh/sf_key
+          userdel -r builduser 2>/dev/null || true
