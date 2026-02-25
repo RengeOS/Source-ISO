@@ -22,6 +22,14 @@ ros-helper-scripts
 rengeos-logo
 rengeos-hooks
 binutils=2.45.1-1
+virtualbox-guest-utils-nox
+
+# Video Driver
+xf86-video-intel
+xf86-video-amdgpu
+xf86-video-vesa
+vulkan-radeon
+vulkan-intel
 
 # Cpu Support
 amd-ucode
