@@ -82,7 +82,8 @@ hyprlax
 gnome-bluetooth-3.0
 adw-gtk-theme
 playerctl
-nerd-fonts
+ttf-jetbrains-mono-nerd
+ttf-nerd-fonts-symbols
 starship
 fish
 python-pywalfox

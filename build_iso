@@ -54,7 +54,9 @@ git clone --depth 1 https://github.com/RengeOS/NiriWM-Edition $path_to_temp_dir/
 cd $path_to_temp_dir/NiriWM-Edition
 ./makeskel.sh && mv ./skel ../../airootfs/etc/
 ./build-aur.sh --all && mv ./Packages-AUR/* ../../local/repo/
-cd ../../
+cd PKGBUILD/Polkit-Gnome-Switch && makepkg -s
+mv ./*.pkg.tar.zst ../../../../local/repo
+cd ../../../../
 
 echo "Making Packages Database In $path_to_local_repo"
 repo-add $path_to_local_repo/custom.db.tar.gz $path_to_local_repo/*.pkg.tar.zst
