@@ -22,7 +22,6 @@ ros-helper-scripts
 rengeos-logo
 rengeos-hooks
 binutils=2.45.1-1
-virtualbox-guest-utils-nox
 
 # Video Driver
 xf86-video-intel
@@ -67,7 +66,16 @@ e2fsprogs
 zram-generator
 
 # TUI & Audio
+pipewire
+pipewire-pulse
+pipewire-jack
+pipewire-alsa
+pipewire-audio
+wireplumber
 alsa-utils
+pavucontrol
+pamixer
+libpulse
 terminus-font
 vim
 nano
@@ -112,16 +120,13 @@ brightnessctl
 nautilus
 networkmanager
 libnotify
-libpulse
 niri
 waybar
 base-devel
 kitty
 ttf-jetbrains-mono-nerd
-pamixer
 ttf-nerd-fonts-symbols
 wlsunset
 hyprlock
 swaync
-pavucontrol
 firefox
