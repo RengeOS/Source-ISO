@@ -1,0 +1,71 @@
+name: Build Both ISO and Release
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure pacman
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm git sudo fakeroot debugedit wget base-devel archiso grub squashfs-tools syslinux dosfstools mtools shadow dialog
+          echo 'PACMAN_AUTH=(sudo)' >> /etc/makepkg.conf
+          sed -i 's/^#PACMAN_OPTS=/PACMAN_OPTS=/' /etc/makepkg.conf
+          echo 'PACMAN_OPTS="--noconfirm"' >> /etc/makepkg.conf
+      - name: Create build user
+        run: |
+          useradd -m builduser
+          echo "builduser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/builduser
+      - name: Build environment (Source-ISO - Minimal Edition)
+        run: |
+          sudo -u builduser git clone --branch minimal-iso https://github.com/RengeOS/Source-ISO /home/builduser/Source-ISO
+          chown -R builduser:builduser /home/builduser/Source-ISO
+          sudo -u builduser bash -c "cd /home/builduser/Source-ISO && PACMAN_OPTS='--noconfirm' bash build_iso"
+          ISO_PATH=$(ls /home/builduser/Source-ISO/out/*.iso | head -n1)
+          ISO_NAME=$(basename "$ISO_PATH")
+          mkdir -p /home/builduser/minimal_parts
+          cp /home/builduser/Source-ISO/out/* /home/builduser/minimal_parts
+          
+          # Below is trick to upload to github release
+          # --START--
+          # cp /home/builduser/Source-ISO/out/*.sha256 /home/builduser/minimal_parts/
+          # split -b 1800M --numeric-suffixes=1 --suffix-length=3 "$ISO_PATH" "/home/builduser/minimal_parts/${ISO_NAME}.part"
+          # --END--
+          echo "MINIMAL_ISO_NAME=${ISO_NAME}" >> $GITHUB_ENV
+          echo "MINIMAL_PARTS_DIR=/home/builduser/minimal_parts" >> $GITHUB_ENV
+          rm -rf /home/builduser/Source-ISO
+      - name: Build environment (Source-ISO - NiriWM Edition)
+        run: |
+          sudo -u builduser git clone --branch niriwm-iso https://github.com/RengeOS/Source-ISO /home/builduser/Source-ISO
+          chown -R builduser:builduser /home/builduser/Source-ISO
+          sudo -u builduser bash -c "cd /home/builduser/Source-ISO && PACMAN_OPTS='--noconfirm' bash build_iso"
+          ISO_PATH=$(ls /home/builduser/Source-ISO/out/*.iso | head -n1)
+          ISO_NAME=$(basename "$ISO_PATH")
+          mkdir -p /home/builduser/niriwm_parts
+          cp /home/builduser/Source-ISO/out/*.sha256 /home/builduser/niriwm_parts/
+          split -b 1800M --numeric-suffixes=1 --suffix-length=3 "$ISO_PATH" "/home/builduser/niriwm_parts/${ISO_NAME}.part"
+          echo "NIRIWM_ISO_NAME=${ISO_NAME}" >> $GITHUB_ENV
+          echo "NIRIWM_PARTS_DIR=/home/builduser/niriwm_parts" >> $GITHUB_ENV
+          rm -rf /home/builduser/Source-ISO
+      - name: Fetch release notes
+        run: |
+          wget -O release-notes.md https://raw.githubusercontent.com/RengeOS/Release-Notes/main/release-notes.md
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          cat release-notes.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - name: Set release tag
+        run: echo "RELEASE_TAG=$(date +%Y.%m.%d)" >> $GITHUB_ENV
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: ${{ env.RELEASE_TAG }}
+          body: ${{ env.RELEASE_NOTES }}
+          files: |
+            ${{ env.MINIMAL_PARTS_DIR }}/*
+            ${{ env.NIRIWM_PARTS_DIR }}/*
