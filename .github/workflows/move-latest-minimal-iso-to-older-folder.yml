@@ -18,7 +18,7 @@ jobs:
       - name: Download from Latest
         run: |
           mkdir -p downloads
-          scp -i ~/.ssh/sf_key -r crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-ISO/Latest/Miminal-Edition/* downloads/
+          scp -i ~/.ssh/sf_key -r crystalforceix@frs.sourceforge.net:/home/frs/project/rengeos/RengeOS-ISO/Latest/Mininal-Edition/* downloads/
 
       - name: Upload to Older
         run: |
