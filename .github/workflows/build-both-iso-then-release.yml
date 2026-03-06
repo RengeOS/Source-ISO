@@ -56,16 +56,13 @@ jobs:
       - name: Fetch release notes
         run: |
           wget -O release-notes.md https://raw.githubusercontent.com/RengeOS/Release-Notes/main/release-notes.md
-          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
-          cat release-notes.md >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
       - name: Set release tag
         run: echo "RELEASE_TAG=$(date +%Y.%m.%d)" >> $GITHUB_ENV
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
           name: ${{ env.RELEASE_TAG }}
-          body: ${{ env.RELEASE_NOTES }}
+          body_path: release-notes.md
           files: |
             ${{ env.MINIMAL_PARTS_DIR }}/*
             ${{ env.NIRIWM_PARTS_DIR }}/*
