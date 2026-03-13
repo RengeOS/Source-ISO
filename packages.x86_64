@@ -21,14 +21,19 @@ wget
 ros-helper-scripts
 rengeos-logo
 rengeos-hooks
-binutils=2.45.1-1
 
-# Video Driver
+# Drivers for GPU
 xf86-video-intel
 xf86-video-amdgpu
 xf86-video-vesa
+xf86-video-nouveau
 vulkan-radeon
 vulkan-intel
+
+# Nvidia
+nvidia-utils
+nvidia-open-dkms
+libglvnd
 
 # Cpu Support
 amd-ucode
@@ -133,4 +138,4 @@ firefox
 tuned
 tuned-ppd
 zenity
-fastfetch-git
+fastfetch
