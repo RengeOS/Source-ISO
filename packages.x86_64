@@ -55,6 +55,7 @@ xfsprogs
 xfsdump
 bcachefs-tools
 bcachefs-dkms
+bcachefs-fixes
 attr
 acl
 lz4
