@@ -33,8 +33,11 @@ makepkg -s
 cd ../../../
 mv $path_to_temp_dir/PKGBUILD/rengeos-hooks/*.pkg.tar.zst $path_to_local_repo
 
-echo "Fixing bcachefs libs issue"
-wget -P $path_to_local_repo https://archive.archlinux.org/packages/b/binutils/binutils-2.45.1-1-x86_64.pkg.tar.zst
+echo "Adding Bcachefs Fixes package into source..."
+cd $path_to_temp_dir/PKGBUILD/bcachefs-fixes
+makepkg -s
+cd ../../../
+mv $path_to_temp_dir/PKGBUILD/bcachefs-fixes/*.pkg.tar.zst $path_to_local_repo
 
 echo "Adding birany linux lts kernel(linux-stratix-pulse-lts) into source..."
 mkdir -p $path_to_temp_dir/Binary-Linux-Kernel-1

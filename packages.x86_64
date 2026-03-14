@@ -21,7 +21,6 @@ wget
 ros-helper-scripts
 rengeos-logo
 rengeos-hooks
-binutils=2.45.1-1
 
 # Cpu Support
 amd-ucode
@@ -43,6 +42,7 @@ xfsprogs
 xfsdump
 bcachefs-tools
 bcachefs-dkms
+bcachefs-fixes
 attr
 acl
 lz4
