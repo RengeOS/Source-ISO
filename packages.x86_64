@@ -55,6 +55,12 @@ gptfdisk
 dosfstools
 e2fsprogs
 
+# Nvidia
+nvidia-utils
+nvidia-open-dkms
+libglvnd
+xf86-video-nouveau
+
 # Zram
 zram-generator
 
