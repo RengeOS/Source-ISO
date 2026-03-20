@@ -13,7 +13,7 @@ mkdir -p $path_to_temp_dir
 
 echo "Adding ROS-Helper-Scripts into source..."
 mkdir -p $path_to_temp_dir/ROS-Helper-Scripts
-git clone --branch support-nvidia --depth 1 https://github.com/RengeOS/ROS-Helper-Scripts $path_to_temp_dir/ROS-Helper-Scripts
+git clone --depth 1 https://github.com/RengeOS/ROS-Helper-Scripts $path_to_temp_dir/ROS-Helper-Scripts
 cd $path_to_temp_dir/ROS-Helper-Scripts
 makepkg -s
 cd ../../
