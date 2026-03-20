@@ -17,7 +17,7 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/releases/latest")
           
           echo "$RELEASE_DATA" | jq -r '.tag_name' > tag.txt
-          echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name | test("^rengeos-minimal-")) | "\(.browser_download_url)\t\(.name)"' > assets.txt
+          echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name | test("^rengeos-minimal-.*\\.part[0-9]+$|^rengeos-minimal-.*\\.sha256$")) | "\(.browser_download_url)\t\(.name)"' > assets.txt
 
       - name: Download assets
         run: |
@@ -25,6 +25,15 @@ jobs:
           while IFS=$'\t' read -r url name; do
             [ -n "$url" ] && curl -L -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -o "downloads/$name" "$url"
           done < assets.txt
+
+      - name: Merge parts
+        run: |
+          cd downloads
+          BASENAME=$(ls *.part* 2>/dev/null | sed 's/\.part[0-9]*$//' | sort -u | head -n1)
+          if [ -n "$BASENAME" ]; then
+            cat $(ls "${BASENAME}.part"* | sort) > "${BASENAME}"
+            rm -f "${BASENAME}.part"*
+          fi
 
       - name: Setup SSH
         run: |
