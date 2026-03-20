@@ -1,0 +1,8 @@
+# Yes, we love Nvidia xD
+
+PRESETS=('nvidia')
+
+ALL_kver='/boot/vmlinuz-linux-stratix-pulse'
+
+nvidia_config='/etc/mkinitcpio.conf.d/archiso-nvidia.conf'
+nvidia_image="/boot/initramfs-linux-stratix-pulse-nvidia.img"
